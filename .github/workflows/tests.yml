@@ -1,0 +1,27 @@
+name: Run Tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        pip install fastapi uvicorn pandas pytest requests
+
+    - name: Start API server
+      run: |
+        uvicorn app:app --host 0.0.0.0 --port 8000 &
+        sleep 3
+
+    - name: Run tests
+      run: pytest -q
